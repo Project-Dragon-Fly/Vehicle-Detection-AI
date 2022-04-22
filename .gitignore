@@ -1,3 +1,12 @@
+# ignored by gitignore -> files that are tracked
+!build/darknet/YoloWrapper.cs
+!chart.png
+!predictions.jpg
+!data/classes.names
+!data/yolov4-vehicle.data
+!cfg/yolov4-vehicle.cfg
+
+# files not tracked
 *.o
 *.a
 *.dSYM
@@ -26,7 +35,6 @@ build_*/
 ninja/
 ninja.zip
 vcpkg_installed/
-!build/darknet/YoloWrapper.cs
 .fuse*
 *.weights
 build/*.cmake
