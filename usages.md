@@ -7,14 +7,6 @@ video=path_to_mp4_file
 image=path_to_single_image_file
 ```
 
-```bash
-weight=/home/edwin/Programing/DragonFly/Vehicle-Detection-AI/backup/yolov4-vehicle_best.weights
-cfg=/home/edwin/Programing/DragonFly/Vehicle-Detection-AI/cfg/yolov4-vehicle.cfg
-data=/home/edwin/Programing/DragonFly/Vehicle-Detection-AI/data/yolov4-vehicle.data
-video=/home/edwin/Programing/DragonFly/environment/dataset/camera_network/video16.mp4
-image=/home/edwin/Programing/DragonFly/environment/dataset/camera_network/video-frames/v06frame-13199.jpg
-```
-
 #### Detect video
 ```bash
 ./darknet detector demo $data $cfg $weight $video -i 0 -thresh 0.25

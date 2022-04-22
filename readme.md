@@ -1,7 +1,7 @@
 # Vehicle-Detection-AI
 The AI interface that detects the features of vehicles.
 
-This repo is a clone of [Darknet](https://github.com/AlexeyAB/darknet). Visit [darknet readme](https://github.com/Project-Dragon-Fly/Vehicle-Detection-AI/blob/main/darknet-README.md)
+This repo is a clone of [Darknet](https://github.com/AlexeyAB/darknet). Visit [darknet readme](darknet-README.md)
 
 
 ## YOLOv4 - Custom Training status
@@ -17,7 +17,7 @@ car <br>
 jcb <br>
 
 ### Learning Chart
-![Learning chart of custom yolo-v4 model](https://github.com/Project-Dragon-Fly/Vehicle-Detection-AI/chart.png "Learning chart of custom yolo-v4 model")
+![Learning chart of custom yolo-v4 model](chart.png "Learning chart of custom yolo-v4 model")
 
 ### Sample Prediction
-![Sample prediction of custom yolo-v4 model](https://github.com/Project-Dragon-Fly/Vehicle-Detection-AI/predictions.jpg "Sample prediction of custom yolo-v4 model").
+![Sample prediction of custom yolo-v4 model](predictions.jpg "Sample prediction of custom yolo-v4 model").
