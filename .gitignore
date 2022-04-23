@@ -2,9 +2,6 @@
 !build/darknet/YoloWrapper.cs
 !chart.png
 !predictions.jpg
-!data/classes.names
-!data/yolov4-vehicle.data
-!cfg/yolov4-vehicle.cfg
 
 # files not tracked
 *.o
@@ -20,7 +17,6 @@
 *.dylib
 *.pyc
 mnist/
-data/
 caffe/
 grasp/
 images/
@@ -28,7 +24,6 @@ opencv/
 convnet/
 decaf/
 submission/
-cfg/
 temp/
 build/darknet/*
 build_*/
