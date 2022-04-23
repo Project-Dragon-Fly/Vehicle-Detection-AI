@@ -13,121 +13,105 @@ import cv2
 
 class Frame_Parser:
     """
-    Identify the source type to build iterable frame collection
+    Identify the source type to build and parse frame collection
     """
 
-    def __init__(self, path):
-        # few configs
-        self.img_ext = {'.png', '.jpg'}
-        self.vid_ext = {'.mp4'}
-        self.media_ext = self.img_ext.union(self.vid_ext)
+    def is_video_file(path):
+        filename = os.path.basename(path)
+        file, ext = os.path.splitext(filename)
+        return ext in {'.mp4'}
 
+    def is_image_file(path):
+        filename = os.path.basename(path)
+        file, ext = os.path.splitext(filename)
+        return ext in {'.png', '.jpg'}
+
+    def is_media_file(path):
+        if Frame_Parser.is_image_file(path) or Frame_Parser.is_video_file(path):
+            return True
+        return False
+
+    def find_source(self):
+        path = self.arg_path.rstrip('*')
         path = os.path.abspath(path)
-        name, extension = os.path.splitext(path)
-        name = name.rstrip('*')
+        _, ext = os.path.splitext(path)
 
-        self.file = list()
+        self.file = list()  # list of all source path
 
-        # determine abspath of source
-        if extension in self.media_ext:
+        if Frame_Parser.is_media_file(path):
             self.file.append(path)
 
-        elif os.path.isdir(name):
-            for f in os.listdir(name):
-                abs_path = os.path.abspath(f)
-                _, ext = os.path.splitext(path)
-                if ext in self.media_ext:
-                    self.files.append(abs_path)
+        elif os.path.isdir(path):
+            for f in os.listdir(path):
+                if Frame_Parser.is_media_file(f):
+                    self.file.append(os.path.join(path, f))
 
-        elif extension == '.txt':
+        elif ext == '.txt':
             with open(path, 'r') as txt_file:
-                for fpath in txt_file.readlines():
-                    path = os.path.abspath(fpath)
-                    name, extension = os.path.splitext(path)
-                    name = name.rstrip('*')
+                for f in txt_file.readlines():
+                    fpath = f.strip('*')
+                    fpath = os.path.abspath(fpath)
+                    _, ext = os.path.splitext(fpath)
 
-                    if extension in self.media_ext:
-                        self.file.append(path)
+                    if Frame_Parser.is_media_file(fpath):
+                        self.file.append(fpath)
 
-                    elif os.path.isdir(name):
-                        for f in os.listdir(name):
-                            abs_path = os.path.abspath(f)
-                            _, ext = os.path.splitext(path)
-                            if ext in self.media_ext:
-                                self.files.append(abs_path)
+                    elif os.path.isdir(fpath):
+                        for ff in os.listdir(fpath):
+                            if Frame_Parser.is_media_file(ff):
+                                self.file.append(os.path.join(fpath, ff))
         else:
             raise ValueError(f"Undefined source {path}")
 
+    def __init__(self, path):
+        self.arg_path = path
+        self.find_source()
+
         self.file_cnt = len(self.file)
         self.frame_cnt = 0
+
         # compute the total frames
         for file in self.file:
-            _, ext = os.path.splitext(file)
-            if ext in self.img_ext:
+            if Frame_Parser.is_image_file(file):
                 self.frame_cnt += 1
-            elif ext in self.vid_ext:
+            else:  # is video file
                 video = cv2.VideoCapture(file)
-                self.frame_cnt += int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
+                self.frame_cnt += int(video.get(cv2.CAP_PROP_FRAME_COUNT))
                 video.release()
-        print(f"[info] found {self.frame_cnt} frame in {self.file_cnt} files")
+        print(f"[info] found {self.frame_cnt} frames in {self.file_cnt} files")
 
         # set the initial frame source
-        self.file_idx = 0
+        self.file_idx = -1
+        self.move_next_frame()
+
+    def move_next_frame(self):
+        self.file_idx += 1
         self.isvideo = False
         self.isimage = False
-        _, ext = os.path.splitext(self.file[self.file_idx])
-        if ext in self.vid_ext:
-            self.isvideo = True
-            self.video = cv2.VideoCapture(self.file[self.file_idx])
-        elif ext in self.img_ext:
-            self.isimage = True
+        if self.file_idx < self.file_cnt:
+            self.isvideo = Frame_Parser.is_video_file(self.file[self.file_idx])
+            self.isimage = Frame_Parser.is_image_file(self.file[self.file_idx])
+            if self.isvideo:
+                self.video = cv2.VideoCapture(self.file[self.file_idx])
 
-    def __iter__(self):
-        return self
-
-    def __next__(self):
+    def next(self):
         while self.isvideo:
             self.isvideo, frame = self.video.read()
             if self.isvideo:
                 return True, frame
             else:
                 self.video.release()
-                self.isvideo = False
-                self.file_idx += 1
-                if self.file_idx >= self.file.cnt:
-                    raise StopIteration
-                _, ext = os.path.splitext(self.file[self.file_idx])
-                if ext in self.vid_ext:
-                    self.isvideo = True
-                    self.video = cv2.VideoCapture(self.file[self.file_idx])
-                elif ext in self.img_ext:
-                    self.isimage = True
+                self.move_next_frame()
 
         if self.isimage:
             frame = cv2.imread(self.file[self.file_idx])
-            self.isimage = False
-            self.file_idx += 1
-            if self.file_idx >= self.file_cnt:
-                return True, frame
-            _, ext = os.path.splitext(self.file[self.file_idx])
-            if ext in self.vid_ext:
-                self.isvideo = True
-                self.video = cv2.VideoCapture(self.file[self.file_idx])
-            elif ext in self.img_ext:
-                self.isimage = True
+            self.move_next_frame()
             return True, frame
+        return False, None
 
-        raise StopIteration
-
-    def next(self):
-        try:
-            return self.__next__()
-        except StopIteration:
-            return False, None
-
-    def get_filename(self):
+    def get_filename_type(self):
         if self.file_idx >= self.file_cnt or self.file_idx < 0:
-            return "null", ".txt"
+            return None, None
         filename = os.path.basename(self.file[self.file_idx])
         return os.path.splitext(filename)
 
