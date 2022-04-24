@@ -27,6 +27,7 @@ class Frame_Parser:
 
     def find_source(self):
         path = self.arg_path.rstrip('*')
+        path = path.replace("\ ", " ")
         path = os.path.abspath(path)
         _, ext = os.path.splitext(path)
 
@@ -106,9 +107,12 @@ class Frame_Parser:
         return False, None
 
     def get_filename_type(self):
-        if self.file_idx >= self.file_cnt or self.file_idx < 0:
+        if self.file_idx > self.file_cnt or self.file_idx < 0:
             return None, None
-        filename = os.path.basename(self.file[self.file_idx])
+        if self.file_idx == self.file_cnt:  # the last file
+        	filename = os.path.basename(self.file[self.file_idx-1])
+        else:
+	        filename = os.path.basename(self.file[self.file_idx])
         return os.path.splitext(filename)
 
 
@@ -137,13 +141,13 @@ class Argument_Handler:
                             "Default: do not save")
 
         parser.add_argument("--weights", type=str,
-                            default="./backup/yolov4-vehicle_best.weights",
+                            default="/home/edwin/Programing/DragonFly/Vehicle-Detection-AI/backup/yolov4-vehicle_best.weights",
                             help="path to YOLOv4 weights")
         parser.add_argument("--config_file", type=str,
-                            default="./cfg/yolov4-vehicle.cfg",
+                            default="/home/edwin/Programing/DragonFly/Vehicle-Detection-AI/cfg/yolov4-vehicle.cfg",
                             help="path to YOLOv4 config file")
         parser.add_argument("--data_file", type=str,
-                            default="./data/yolov4-vehicle.data",
+                            default="/home/edwin/Programing/DragonFly/Vehicle-Detection-AI/data/yolov4-vehicle.data",
                             help="path to YOLOV4 data file")
 
         parser.add_argument("--thresh", type=float, default=.10,
