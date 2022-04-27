@@ -1,7 +1,7 @@
 # Vehicle-Detection-AI
 The AI interface that detects the features of vehicles.
 
-This repo is a clone of [Darknet](https://github.com/AlexeyAB/darknet). Visit [darknet readme](darknet-README.md)
+This repo is a fork of [Darknet](https://github.com/AlexeyAB/darknet). Visit [darknet readme](darknet-README.md)
 
 
 ## YOLOv4 - Custom Training status
