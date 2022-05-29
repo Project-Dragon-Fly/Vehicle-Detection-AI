@@ -8,9 +8,9 @@ if len(physical_devices) > 0:
 from yolov4.tf import YOLOv4
 
 CONSTS = dict()
-CONSTS['cfg'] = 'data/pip-yolov4-vehicle.cfg'
-CONSTS['names'] = 'data/classes.names'
-CONSTS['weights'] = 'data/yolov4-vehicle_best.weights'
+CONSTS['cfg'] = 'AI_yolov4/data/pip-yolov4-vehicle.cfg'
+CONSTS['names'] = 'AI_yolov4/data/classes.names'
+CONSTS['weights'] = 'AI_yolov4/data/yolov4-vehicle_best.weights'
 
 
 print("loading the model")
