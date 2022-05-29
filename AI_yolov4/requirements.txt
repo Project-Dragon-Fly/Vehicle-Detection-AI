@@ -1,2 +1,4 @@
 tensorflow
 yolov4
+numpy
+python-opencv

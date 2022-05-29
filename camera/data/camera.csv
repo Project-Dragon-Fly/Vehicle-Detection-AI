@@ -1,0 +1,10 @@
+camera,location cord,local name,division name,video_loc,video_start_time
+1,11,L1,D1,file1.mp4,0
+2,22,L2,D2,file2.mp4,0
+4,44,L2,D2,file4.mp4,0
+3,33,L3,D2,file3.mp4,0
+5,55,L4,D3,file5.mp4,0
+6,66,L4,D3,file6.mp4,0
+7,77,L5,D3,file7.mp4,0
+8,88,L6,D4,file8.mp4,0
+9,99,L7,D4,file9.mp4,0
