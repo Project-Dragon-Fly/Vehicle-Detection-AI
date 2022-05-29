@@ -59,10 +59,10 @@ camera_obj = dict()
 
 DB = pd.read_csv(CONST['camera'])
 for j in range(len(DB)):
-    id = DB['camera'][j]
-    loc = CAMERA[id]['location cord'] = DB['location cord'][j]
-    local_name = CAMERA[id]['local name'] = DB['local name'][j]
-    division = CAMERA[id]['division name'] = DB['division name'][j]
+    id         = DB['camera'][j]
+    loc        = DB['location cord'][j]
+    local_name = DB['local name'][j]
+    division   = DB['division name'][j]
 
     camera_obj[id] = Camera(id,loc,local_name,division)
 
