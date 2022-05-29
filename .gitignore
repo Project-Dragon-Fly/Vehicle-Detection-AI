@@ -2,3 +2,4 @@
 *.pb
 *.index
 AI_yolov4/data/vehicle/*
+*.pyc
