@@ -81,8 +81,9 @@ class Vehicle:
 				valid_targets[id]['exit_time'] = start_time + frame_no/camera.fps
 				valid_targets[id]['tlbr'].append(bbox)
 				valid_targets[id]['features'].append(features)
+				print(f"{frame_no} {bbox}")
 
-		valid_targets = [valid_targets[id] for id in valid_targets if valid_targets[id]['exit_time'] - valid_targets['start_time'] >= 1]
+		valid_targets = [valid_targets[id] for id in valid_targets if valid_targets[id]['exit_time'] - valid_targets[id]['entry_time'] >= 1]
 		return valid_targets
 
 	def update_location(self,vehi):
@@ -95,8 +96,8 @@ class Vehicle:
 	def predict_next_cam(self):
 		try:
 			recent = self.last_seen[-1]
-			recent_cam = recent['camera']
-			recent_exit = recent['exit_time']
+			recent_cam = recent[0]
+			recent_exit = recent[2]
 
 			predict = list()
 			lnk = recent_cam.next_camera()

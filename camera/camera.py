@@ -50,7 +50,7 @@ class Camera:
 
 
         self.link = dict()
-        self.update_link(self,0,216000) # self reference, min=0sec, max=1hr
+        self.update_link(self,0,120) # self reference, min=0sec, max=1hr
 
     def __str__(self):
         return f"camera {self.id} at {self.location} {self.local_name} {self.division_name}"

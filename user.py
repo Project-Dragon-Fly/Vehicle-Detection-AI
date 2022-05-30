@@ -30,33 +30,34 @@ target_vehi = Vehicle(v_type)
 
 
 valid_targets = target_vehi.find_in_camera(camera,start_time,end_time)
+
 if len(valid_targets) == 0:
-	user.message("no vehicles found")
-	exit()
+    user.message("no vehicles found")
+    exit()
 elif len(valid_targets) > 1:
-	target = user.select_one_target(valid_targets)
+    target = user.select_one_target(valid_targets)
 else:
-	target = valid_targets[0]
-target_vehi.update(target)
+    target = valid_targets[0]
+target_vehi.update_location(target)
 
 
 
 while True:
 
-	next_search_cam = target_vehi.predict_next_cam()
-	valid_targets = list()
+    next_search_cam = target_vehi.predict_next_cam()
+    valid_targets = list()
 
-	for camera,start_time,end_time in next_search_cam:
-		valid_targets.extend(target_vehi.find_in_camera(camera,start_time,end_time))
+    for camera,start_time,end_time in next_search_cam:
+        valid_targets.extend(target_vehi.find_in_camera(camera,start_time,end_time))
 
-	if len(valid_targets) == 0:
-		user.message("no vehicles found, search ended")
-		break
-	elif len(valid_targets) > 1:
-		target = user.select_one_target(valid_targets)
-	else:
-		target = valid_targets[0]
-	target_vehi.update(target)
+    if len(valid_targets) == 0:
+        user.message("no vehicles found, search ended")
+        break
+    elif len(valid_targets) > 1:
+        target = user.select_one_target(valid_targets)
+    else:
+        target = valid_targets[0]
+    target_vehi.update_location(target)
 
 
 
