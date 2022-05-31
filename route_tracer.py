@@ -98,13 +98,16 @@ class Tracer:
             print(f"{cam} from {row['entry_time']} to {row['exit_time']} at {cam.latitude}, {cam.longitude}")
             date_str = datetime.fromtimestamp(row['exit_time']).strftime("%m/%d/%Y, %H:%M:%S")
             route_data.append({
-                "name": str(cam),
+                "name": str(cam.cam_name),
                 "time": date_str,
                 "gps": f"{cam.latitude},{cam.longitude}",
             })
+        print(route_data)
         return route_data, self._get_map_loc_params(route_data)
 
     def _get_map_loc_params(self, route_data):
+        if not route_data:
+            return None
         params = "origin=" + route_data[0]["gps"] +  "&destination=" + route_data[-1]["gps"]
 
         waypoints = ""
