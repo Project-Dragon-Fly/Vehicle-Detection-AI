@@ -1,11 +1,11 @@
 camera_id,camera_name,latitude,longitude,start_time,video_file,detection_file,saved_frame
-1,GCEK gate (anthoor 60),11.9866459,75.378761,28/05/22 11:07:14,/home/jupyter-team-dragonfly/DETECTOR/camera/data/video1.mp4,/home/jupyter-team-dragonfly/DETECTOR/camera/data/video1.csv,/home/jupyter-team-dragonfly/DETECTOR/camera/data/video1_vehicles
-2,Parassinikadavu (16),11.98443441,75.3988249,28/05/22 04:01:49,/home/jupyter-team-dragonfly/DETECTOR/camera/data/video2.mp4,/home/jupyter-team-dragonfly/DETECTOR/camera/data/video2.csv,/home/jupyter-team-dragonfly/DETECTOR/camera/data/video2_vehicles
-3,ID plot (GCEK 18) (nill),11.9896155,75.3837928,28/05/22 11:07:14,/home/jupyter-team-dragonfly/DETECTOR/camera/data/video3.mp4,/home/jupyter-team-dragonfly/DETECTOR/camera/data/video3.csv,/home/jupyter-team-dragonfly/DETECTOR/camera/data/video3_vehicles
-4,camera_name,11.99012,75.38865,28/05/22 11:07:14,/home/jupyter-team-dragonfly/DETECTOR/camera/data/video4.mp4,/home/jupyter-team-dragonfly/DETECTOR/camera/data/video4.csv,/home/jupyter-team-dragonfly/DETECTOR/camera/data/video4_vehicles
-5,camera_name,11.99179,75.39458,28/05/22 11:07:14,/home/jupyter-team-dragonfly/DETECTOR/camera/data/video5.mp4,/home/jupyter-team-dragonfly/DETECTOR/camera/data/video5.csv,/home/jupyter-team-dragonfly/DETECTOR/camera/data/video5_vehicles
-6,camera_name,11.98478,75.40221,28/05/22 11:07:14,/home/jupyter-team-dragonfly/DETECTOR/camera/data/video6.mp4,/home/jupyter-team-dragonfly/DETECTOR/camera/data/video6.csv,/home/jupyter-team-dragonfly/DETECTOR/camera/data/video6_vehicles
-7,camera_name,11.98503,75.40505,28/05/22 11:07:14,/home/jupyter-team-dragonfly/DETECTOR/camera/data/video7.mp4,/home/jupyter-team-dragonfly/DETECTOR/camera/data/video7.csv,/home/jupyter-team-dragonfly/DETECTOR/camera/data/video7_vehicles
-8,camera_name,11.98432,75.38137,28/05/22 11:07:14,/home/jupyter-team-dragonfly/DETECTOR/camera/data/video8.mp4,/home/jupyter-team-dragonfly/DETECTOR/camera/data/video8.csv,/home/jupyter-team-dragonfly/DETECTOR/camera/data/video8_vehicles
-9,camera_name,11.98461,75.36664,28/05/22 11:07:14,/home/jupyter-team-dragonfly/DETECTOR/camera/data/video9.mp4,/home/jupyter-team-dragonfly/DETECTOR/camera/data/video9.csv,/home/jupyter-team-dragonfly/DETECTOR/camera/data/video9_vehicles
-10,camera_name,11.98865,75.38008,28/05/22 11:07:14,/home/jupyter-team-dragonfly/DETECTOR/camera/data/video10.mp4,/home/jupyter-team-dragonfly/DETECTOR/camera/data/video10.csv,/home/jupyter-team-dragonfly/DETECTOR/camera/data/video10_vehicles
+1,GCEK gate (anthoor 60),11.9866459,75.378761,28/05/22 11:07:14,camera/data/video1.mp4,camera/data/video1.csv,camera/data/video1_vehicles
+2,Parassinikadavu (16),11.98443441,75.3988249,28/05/22 04:01:49,camera/data/video2.mp4,camera/data/video2.csv,camera/data/video2_vehicles
+3,ID plot (GCEK 18) (nill),11.9896155,75.3837928,28/05/22 11:07:14,camera/data/video3.mp4,camera/data/video3.csv,camera/data/video3_vehicles
+4,camera_name,11.99012,75.38865,28/05/22 11:07:14,camera/data/video4.mp4,camera/data/video4.csv,camera/data/video4_vehicles
+5,camera_name,11.99179,75.39458,28/05/22 11:07:14,camera/data/video5.mp4,camera/data/video5.csv,camera/data/video5_vehicles
+6,camera_name,11.98478,75.40221,28/05/22 11:07:14,camera/data/video6.mp4,camera/data/video6.csv,camera/data/video6_vehicles
+7,camera_name,11.98503,75.40505,28/05/22 11:07:14,camera/data/video7.mp4,camera/data/video7.csv,camera/data/video7_vehicles
+8,camera_name,11.98432,75.38137,28/05/22 11:07:14,camera/data/video8.mp4,camera/data/video8.csv,camera/data/video8_vehicles
+9,camera_name,11.98461,75.36664,28/05/22 11:07:14,camera/data/video9.mp4,camera/data/video9.csv,camera/data/video9_vehicles
+10,camera_name,11.98865,75.38008,28/05/22 11:07:14,camera/data/video10.mp4,camera/data/video10.csv,camera/data/video10_vehicles
