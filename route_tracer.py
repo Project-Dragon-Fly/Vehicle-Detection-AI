@@ -101,4 +101,16 @@ class Tracer:
                 "time": date_str,
                 "gps": f"{cam.latitude},{cam.longitude}",
             })
-        return route_data
+        return route_data, self._get_map_loc_params(route_data)
+
+    def _get_map_loc_params(self, route_data):
+        params = "origin=" + route_data[0]["gps"] +  "&destination=" + route_data[-1]["gps"]
+
+        waypoints = ""
+        for i in range(1, len(route_data)-1):
+            waypoints += str(route_data[i]["gps"]) + "|"
+        if waypoints:
+            waypoints = waypoints[:-1]
+            params += "&waypoints=" + waypoints
+        
+        return params
