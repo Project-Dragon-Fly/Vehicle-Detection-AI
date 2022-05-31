@@ -15,7 +15,7 @@ class VehicleNotFound(Exception):
     """ User aborted Request    """
     pass
 
-class User:
+class Tracer:
     v_options = VEHICLE_LABEL
     c_options = INITIAL_LOCATION
 
@@ -95,16 +95,3 @@ class User:
             cam = camera_obj[row['cam_id']]
             print(f"{cam} from {row['entry_time']} to {row['exit_time']} at {cam.latitude},{cam.longitude}")
 
-
-
-
-class Tracer:
-
-    def __init__(self,  v_type, c_id, start_time, end_time):
-        pass
-
-    def trace_next(self):
-        pass
-
-    def select_vechicle(self, vechile):
-        pass
