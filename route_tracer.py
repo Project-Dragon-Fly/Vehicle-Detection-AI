@@ -82,8 +82,8 @@ class Tracer:
 
    
     
-    def select(self, vehicle):
-        self.vehicle = vehicle
+    def select(self, vehicle_index):
+        self.vehicle = self.vehicle_list[vehicle_index]
         self._append_vehicle_history(self.vehicle)
     
     def get_trace_status(self):
