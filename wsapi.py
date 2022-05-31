@@ -2,7 +2,6 @@ from typing import List
 
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from fastapi.responses import JSONResponse
-import json
 
 from route_tracer import Tracer, VehicleNotFound, VEHICLE_LABEL, INITIAL_LOCATION
 
@@ -19,12 +18,13 @@ class ConnectionManager:
     
     async def intialise(self, websocket: WebSocket):
         resp = await websocket.receive_json()
-        data = json.loads(resp)["DATA"]
+        print(resp)
+        data = resp["DATA"]
         self.route_tracer = Tracer(
             v_type=data["v_type"], 
-            c_id=data["v_type"], 
-            start_time=data["v_type"], 
-            end_time=data["v_type"]
+            c_id=int(data["c_id"]), 
+            start_time=float(data["start_time"]), 
+            end_time=float(data["end_time"])
         )
 
     async def loop(self, websocket: WebSocket):
@@ -34,9 +34,10 @@ class ConnectionManager:
                 "DATA": self.route_tracer.vehicle_list
             })
             resp = await websocket.receive_json()
-            vehicle_index = json.loads(resp)["DATA"].get("vid")
+            print(resp)
+            vehicle_index = resp["DATA"].get("vid")
             self.route_tracer.vehicle = self.route_tracer.vehicle_list[vehicle_index]
-        self.route_tracer.trace()
+        self.route_tracer.trace_loop()
         await websocket.send_json({
             "TYPE": "DISPLAY",
             "DATA": self.route_tracer.get_trace_status()
@@ -44,7 +45,7 @@ class ConnectionManager:
 
     async def trace_end(self, websocket: WebSocket):
         await websocket.send_json({
-            "TYPE": "DISPLAY",
+            "TYPE": "END",
             "DATA": self.route_tracer.get_trace_status()
         })
     
