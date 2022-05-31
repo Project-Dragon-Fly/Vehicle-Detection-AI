@@ -67,6 +67,7 @@ class Camera:
         for uid in unique_id:
             vehi = dict()
             vehi['cam_id'] = self.cam_id
+            vehi['cam_name'] = self.cam_name
             vehi['class_label'] = class_label
             prune = detections[detections['id']==uid]
             vehi['entry_time'] = prune['time_sec'].min() + self.start_time
