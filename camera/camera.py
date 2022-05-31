@@ -9,7 +9,7 @@ CONSTS = dict()
 CONSTS['camera'] = "camera/data/camera.csv"
 
 class Camera:
-    def __init__(self, cam_id, cam_name, latitude, longitude, detection_file, start_time):
+    def __init__(self, cam_id, cam_name, latitude, longitude, start_time, video_file,detection_file,saved_frame):
         self.cam_id = int(cam_id)
         self.cam_name = str(cam_name)
         self.latitude = float(latitude)
