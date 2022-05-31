@@ -2,6 +2,8 @@ import logging
 import pandas as pd
 import numpy as np
 from math import radians, cos, sin, asin, sqrt
+from datetime import datetime
+import os
 
 CONSTS = dict()
 CONSTS['camera'] = "camera/data/camera.csv"
@@ -71,6 +73,7 @@ class Camera:
             vehi['exit_time'] = prune['time_sec'].max() + self.start_time
             vehi['bbox'] = prune['bbox'].iloc[0]
             vehi['bbox'] = list(map(float,vehi['bbox'][1:-1].split()))
+            vehi['frame_saved'] = os.path.join(self.saved_frame,str(uid))
             
             vehicles.append(vehi)
         
@@ -89,7 +92,7 @@ for j in range(len(DB)):
     cam_name       = DB['camera_name'][j]
     latitude       = DB['latitude'][j]
     longitude      = DB['longitude'][j]
-    start_time     = DB['start_time'][j]
+    start_time     = datetime.strptime(DB['start_time'][j],"%d/%m/%y %H:%M:%S").timestamp()
     video_file     = DB['video_file'][j]
     detection_file = DB['detection_file'][j]
     saved_frame    = DB['saved_frame'][j]
