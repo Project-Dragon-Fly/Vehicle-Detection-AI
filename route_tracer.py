@@ -1,6 +1,7 @@
 from camera.camera import camera_obj
 from AI_yolov4.config import get_valid_class_label
 import pandas as pd
+from datetime import datetime
 
 
 VEHICLE_LABEL = get_valid_class_label()
@@ -80,8 +81,7 @@ class Tracer:
                 self.vehicle = None
                 return self.vehicle_list
 
-   
-    
+
     def select(self, vehicle_index):
         self.vehicle = self.vehicle_list[vehicle_index]
         self._append_vehicle_history(self.vehicle)
@@ -91,7 +91,14 @@ class Tracer:
         df = df.sort_values('exit_time')
 
         print("Travelled route")
+        route_data = []
         for index,row in df.iterrows():
             cam = camera_obj[row['cam_id']]
-            print(f"{cam} from {row['entry_time']} to {row['exit_time']} at {cam.latitude},{cam.longitude}")
-
+            print(f"{cam} from {row['entry_time']} to {} at {cam.latitude},{cam.longitude}")
+            date_str = datetime.fromtimestamp(row['exit_time']).strftime("%m/%d/%Y, %H:%M:%S")
+            route_data.append({
+                "name": str(cam),
+                "time": date_str,
+                "gps": f"{cam.latitude},{cam.longitude}",
+            })
+        return route_data
