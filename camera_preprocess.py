@@ -1,14 +1,18 @@
 """
 Script that converts the video frame into a csv format of detections
 """
+from pathlib import Path
+import os
 import argparse
 parser = argparse.ArgumentParser()
 parser.add_argument("video_file")
 parser.add_argument("csv_file")
+parser.add_argument("frame_save_dir")
 args = parser.parse_args()
 
 video_file = args.video_file
 csv_file = args.csv_file
+frame_dir = args.frame_save_dir
 
 import cv2
 import pandas as pd
@@ -40,11 +44,12 @@ logging.info(f"loading video file at {fps} fps with lenght {max_frames} frames")
 
 
 tracker = Tracker(metric)
-v_detections = {'id':list(),'frame_no':list(), 'time_sec':list(), 'class_label':list(), 
-                'bbox':list(), 'features':list()
+v_detections = {'id':list(), 'frame_no':list(), 'time_sec':list(), 
+                'class_label':list(), 'bbox':list(), 'features':list()
                }
 
 logging.info("extracting the frames")
+frame_save_timer = dict()
 frame_no = -1
 try:
     while True:
@@ -91,6 +96,28 @@ try:
             v_detections['class_label'].append(track.class_name)
             v_detections['bbox'].append(track.to_tlbr())
             v_detections['features'].append(track.features)
+            
+            # save the image
+            dir_path = os.path.join(frame_dir,str(track.track_id))
+            Path(dir_path).mkdir(parents=True, exist_ok=True)
+            _,_,w,h = track.to_tlwh()
+            if track.track_id not in frame_save_timer:
+                frame_save_timer[track.track_id] = 0
+            
+            if frame_save_timer[track.track_id] <= 0 and w*h >= 10000:
+                file_no = str(len(os.listdir(dir_path))+1)
+                file_path = os.path.join(dir_path,f"{file_no}.png")
+                ymin,xmin,ymax,xmax = tuple(map(int,track.to_tlbr()))
+                cropped_img = frame[xmin:xmax,ymin:ymax]
+                try:
+                    cv2.imwrite(file_path,cropped_img)
+                    frame_save_timer[track.track_id] = 11
+                except Exception as e:
+                    logging.warning(e)
+            
+            frame_save_timer[track.track_id] -= 1 
+                
+            
 
             logging.info(f"found {track.class_name} at frame no {frame_no}")
         logging.info(f"%5.2f percent {frame_no}/{max_frames}"%(frame_no/max_frames))   

@@ -12,8 +12,10 @@ class Camera:
         self.cam_name = str(cam_name)
         self.latitude = float(latitude)
         self.longitude = float(longitude)
-        self.detection_file = str(detection_file)
         self.start_time = float(start_time)
+        self.video_file = str(video_file)
+        self.detection_file = str(detection_file)
+        self.saved_frame = str(saved_frame)
         
         self.distance = dict()
 
@@ -87,11 +89,14 @@ for j in range(len(DB)):
     cam_name       = DB['camera_name'][j]
     latitude       = DB['latitude'][j]
     longitude      = DB['longitude'][j]
-    detection_file = DB['detection_file'][j]
     start_time     = DB['start_time'][j]
+    video_file     = DB['video_file'][j]
+    detection_file = DB['detection_file'][j]
+    saved_frame    = DB['saved_frame'][j]
+    
     
 
-    C = Camera(cam_id,cam_name,latitude,longitude,detection_file,start_time)
+    C = Camera(cam_id,cam_name,latitude,longitude,start_time,video_file,detection_file,saved_frame)
     for cid in camera_obj:
         C.save_gps_distance(camera_obj[cid])
         camera_obj[cid].save_gps_distance(C)
