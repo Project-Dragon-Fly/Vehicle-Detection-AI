@@ -1,101 +1,99 @@
-import cv2
+import logging
 import pandas as pd
+import numpy as np
+from math import radians, cos, sin, asin, sqrt
 
-CONST = dict()
-CONST['camera'] = "camera/data/camera.csv"
-CONST['link']   = "camera/data/cam_link.csv"
-
-
-# ------------------------------------------------------------------------------
-class VideoExtractor:
-    def __init__(self, video_in_path, video_start_time, start_time, end_time):
-        self.video = cv2.VideoCapture(video_in_path)
-        self.fps = self.video.get(cv2.CAP_PROP_FPS)
-        self.cur_time = video_start_time
-        self.end_time = end_time
-
-        ret, frame = self.video.read()
-        while ret and (self.cur_time < start_time):
-            self.cur_time += 1/self.fps
-            ret, frame = self.video.read()
-
-        if not ret:
-            self.__del__()
-
-    def __del__(self):
-        self.video.release()
-
-    def __iter__(self):
-        return self
-
-    def __next__(self):
-        ret, frame = self.video.read()
-        if ret and (self.cur_time <= self.end_time):
-            self.cur_time += 1/self.fps
-            return frame
-        self.__del__()
-        raise StopIteration
+CONSTS = dict()
+CONSTS['camera'] = "camera/data/camera.csv"
 
 class Camera:
-    def __init__(self, id, loc, local_name, division, video_loc, video_start_time):
-        self.id = id
-        self.location = loc
-        self.local_name = local_name
-        self.division_name = division
-        self.video_loc = video_loc
-        self.video_start_time = video_start_time
-        video = cv2.VideoCapture(self.video_loc);
-        self.fps = video.get(cv2.CAP_PROP_FPS)
-        video.release()
-
-
-        self.link = dict()
-        self.update_link(self,0,120) # self reference, min=0sec, max=1hr
+    def __init__(self, cam_id, cam_name, latitude, longitude, detection_file, start_time):
+        self.cam_id = int(cam_id)
+        self.cam_name = str(cam_name)
+        self.latitude = float(latitude)
+        self.longitude = float(longitude)
+        self.detection_file = str(detection_file)
+        self.start_time = float(start_time)
+        
+        self.distance = dict()
 
     def __str__(self):
-        return f"camera {self.id} at {self.location} {self.local_name} {self.division_name}"
+        return f"Camera {self.cam_name} at ({self.latitude},{self.longitude})"
 
-    def update_link(self,camera,min_time, max_time):
-        lnk = dict()
-        lnk['camera'] = camera
-        lnk['min_time'] = min_time
-        lnk['max_time'] = max_time
-        self.link[camera.id] = lnk
+    def save_gps_distance(self, camera, threshold_KM=2):
+        lon1 = radians(self.longitude)
+        lon2 = radians(camera.longitude)
+        lat1 = radians(self.latitude)
+        lat2 = radians(camera.latitude)
+        
+        # Haversine formula
+        dlon = lon2 - lon1
+        dlat = lat2 - lat1
+        a = sin(dlat / 2)**2 + cos(lat1) * cos(lat2) * sin(dlon / 2)**2
+        c = 2 * asin(sqrt(a))
+        
+        # Radius of earth in kilometers
+        r = 6371
+        
+        distance = c*r # KM
+        
+        if distance <= threshold_KM:
+            self.distance[camera.cam_id] = distance
+    
 
     def next_camera(self):
-        return self.link
+        id_list = sorted(self.distance, key=lambda k: self.distance[k])
+        parse_cam = dict()
+        for cid in id_list:
+            parse_cam[cid] = dict()
+            parse_cam[cid]['distance'] = self.distance[cid] # in KM
+            parse_cam[cid]['min_time'] = (self.distance[cid]/100)*60*60  # max speed 100 kmph
+            parse_cam[cid]['max_time'] = (self.distance[cid]/20)*60*60  # min speed 20 kmph
+        return parse_cam
 
-    def filter_frame(self,start_time,end_time):
-        return VideoExtractor(self.video_loc,self.video_start_time, start_time, end_time)
+    def filter_frame(self,start_time,end_time,class_label):
+        detections = pd.read_csv(self.detection_file)
+        
+        prune = detections[detections['time_sec'] >= start_time-self.start_time]
+        prune = prune[prune['time_sec'] <= end_time-self.start_time]     
+        prune = prune[prune['class_label']==class_label]
+        
+        unique_id = prune['id'].unique()
+        vehicles = list()
+        for uid in unique_id:
+            vehi = dict()
+            vehi['cam_id'] = self.cam_id
+            vehi['class_label'] = class_label
+            prune = detections[detections['id']==uid]
+            vehi['entry_time'] = prune['time_sec'].min() + self.start_time
+            vehi['exit_time'] = prune['time_sec'].max() + self.start_time
+            vehi['bbox'] = prune['bbox'].iloc[0]
+            vehi['bbox'] = list(map(float,vehi['bbox'][1:-1].split()))
+            
+            vehicles.append(vehi)
+        
+        return vehicles
+            
 
+            
 #-------------------------------------------------------------------------------
-
 # LOADING DATA INTO CALSS OBJ---------------------------------------------------
+logging.info(f"creating camera objects... loading {CONSTS['camera']}")
 camera_obj = dict()
 
-DB = pd.read_csv(CONST['camera'])
+DB = pd.read_csv(CONSTS['camera'])
 for j in range(len(DB)):
-    id         = DB['camera'][j]
-    loc        = DB['location cord'][j]
-    local_name = DB['local name'][j]
-    division   = DB['division name'][j]
-    video_loc  = DB['video_loc'][j]
-    v_start_time = DB["video_start_time"][j]
+    cam_id         = DB['camera_id'][j]
+    cam_name       = DB['camera_name'][j]
+    latitude       = DB['latitude'][j]
+    longitude      = DB['longitude'][j]
+    detection_file = DB['detection_file'][j]
+    start_time     = DB['start_time'][j]
+    
 
-    camera_obj[id] = Camera(id,loc,local_name,division,video_loc,v_start_time)
-
-#------------------------------------------------------------
-
-DB = pd.read_csv(CONST['link'])
-for j in range(len(DB)):
-    src   = DB['from_cam_ip'][j]
-    des   = DB['to_cam_ip'][j]
-    min_t = DB['min_time'][j]
-    max_t = DB['max_time'][j]
-
-    cam1 = camera_obj[src]
-    cam2 = camera_obj[des]
-
-    cam1.update_link(cam2,min_t,max_t)
-    cam2.update_link(cam1,min_t,max_t)
-#-------------------------------------------------------------------------------
+    C = Camera(cam_id,cam_name,latitude,longitude,detection_file,start_time)
+    for cid in camera_obj:
+        C.save_gps_distance(camera_obj[cid])
+        camera_obj[cid].save_gps_distance(C)
+        
+    camera_obj[cam_id] = C

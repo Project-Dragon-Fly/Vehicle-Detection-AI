@@ -1,10 +1,11 @@
-camera,location cord,local name,division name,video_loc,video_start_time
-1,11,L1,D1,file1.mp4,0
-2,22,L2,D2,file2.mp4,0
-4,44,L2,D2,file4.mp4,0
-3,33,L3,D2,file3.mp4,0
-5,55,L4,D3,file5.mp4,0
-6,66,L4,D3,file6.mp4,0
-7,77,L5,D3,file7.mp4,0
-8,88,L6,D4,file8.mp4,0
-9,99,L7,D4,file9.mp4,0
+camera_id,camera_name,latitude,longitude,detection_file,start_time
+1,Dharmashala Junction,11.98638,75.37624,/home/jupyter-team-dragonfly/DETECTOR/camera/data/video1.csv,0
+2,Dharmashala Canara Bank,11.98702,75.38011,/home/jupyter-team-dragonfly/DETECTOR/camera/data/video2.csv,0
+3,ID road,11.98811,75.38138,/home/jupyter-team-dragonfly/DETECTOR/camera/data/video3.csv,0
+4,Parassini Snake Park,11.99012,75.38865,/home/jupyter-team-dragonfly/DETECTOR/camera/data/video4.csv,0
+5,Vismaya Park,11.99179,75.39458,/home/jupyter-team-dragonfly/DETECTOR/camera/data/video5.csv,0
+6,Parassini Bridge1,11.98478,75.40221,/home/jupyter-team-dragonfly/DETECTOR/camera/data/video6.csv,0
+7,Parassini Bridge 2,11.98503,75.40505,/home/jupyter-team-dragonfly/DETECTOR/camera/data/video7.csv,0
+8,GCEK back entrance,11.98432,75.38137,/home/jupyter-team-dragonfly/DETECTOR/camera/data/video8.csv,0
+9,MiZone,11.98461,75.36664,/home/jupyter-team-dragonfly/DETECTOR/camera/data/video9.csv,0
+10,NIFT,11.98865,75.38008,/home/jupyter-team-dragonfly/DETECTOR/camera/data/video10.csv,0

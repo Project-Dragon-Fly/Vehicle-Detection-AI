@@ -1,0 +1,105 @@
+class Vehicle:
+	def __init__(self,type,color):	
+		self.type = type
+		self.color = color
+		self.features = None
+		self.last_seen = list()
+	
+	def find_in_camera(camera, start_time, end_time):
+		tracker = deep_sort()
+		for frame in camera.filter(start_time,end_time):
+			detection = yolov4(frame)
+			for detect in detection:
+				if detect['type'] != self.type or detect['color'] != self.color:
+					continue
+				if self.features is not None and siamese(self.features,detect['features']) < 0.5:
+					continue
+				
+				tracker.update(detect)
+		
+		valid_targets = list()
+		for track in tracker.vehicles:	
+			vehi = dict()
+			vehi['features'] = track.features()
+			vehi['camera'] = camera
+			vehi['entry_time'] = start_time + track.min_frame_no/camera.fps
+			vehi['exit_time'] = start_time + track.max_frame_no/camera.fps
+		
+			valid_targets.append(vehi)
+		return valid_targets
+	
+	def update_location(self.vehi):
+		self.features = vehi['features']
+		self.last_seen.append([vehi['camera'],
+				       vehi['entry_time'],
+				       vehi['exit_time']
+				      ])
+	
+	def predict_next_cam(self):
+		try:
+			recent = self.last_seen[-1]
+			recent_cam = recent['camera']
+			recent_exit = recent['exit_time']
+			
+			predict = list()
+			for next_cam in recent_cam.next_camera():
+				min_time = recent_exit + cameraGap(recent_cam,next_cam,'min')
+				max_time = recent_exit + cameraGap(recent_cam,next_cam,'max')
+				predict.append([next_cam, min_time, max_time])
+			return predict
+		
+		except Exception as e:
+			print("No recent camera found, index error")
+			raise e
+	
+			
+				
+
+v_type, v_color, camera, start_time, end_time = user.input()
+target_vehi = Vehicle(v_type, v_color)
+
+
+
+valid_targets = target_vehi.find_in_camera(camera,start_time,end_time)
+if len(valid_targets) == 0:
+	user.message("no vehicles found")
+	exit()
+elif len(valid_targets) > 1:
+	target = user.select_one_target(valid_targets)
+else:
+	target = valid_targets[0]
+target_vehi.update(target)
+
+
+
+while True:
+	
+	next_search_cam = target_vehi.predict_next_cam()
+	valid_targets = list()
+	
+	for pred_cam in next_search_cam:
+		camera = pred_cam[0]
+		start_time = pred_cam[1]
+		end_time = pred_cam[2]
+		
+		valid_targets.extend(target_vehi.find_in_camera(camera,start_time,end_time))
+	
+	if len(valid_targets) == 0:
+		user.message("no vehicles found, search ended")
+		break
+	elif len(valid_targets) > 1:
+		target = user.select_one_target(valid_targets)
+	else:
+		target = valid_targets[0]
+	target_vehi.update(target)
+
+
+
+print("Travelled route")
+for vehi in target_vehi.last_seen:
+	print(vehi['camera'])
+	print(vehi['entry time'])
+	print(vehi['exit time'])
+	
+	print(" NEXT-> ")
+print("END")
